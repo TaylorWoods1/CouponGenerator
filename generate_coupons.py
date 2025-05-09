@@ -47,7 +47,7 @@ csv_file = open('promotion_codes.csv', 'w', newline='')
 writer = csv.writer(csv_file)
 writer.writerow(["Discount Codes", "Expiry Date", "Offer"])  # <-- Add header row
 
-def generate_code(prefix, length=8):
+def generate_code(prefix, length=12):
     # Generates a code like PREFIX-AB12CD34
     random_part = ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
     return f"{prefix}-{random_part}"
