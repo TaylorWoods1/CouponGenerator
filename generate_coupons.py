@@ -10,23 +10,28 @@ import os
 load_dotenv()
 stripe.api_key = os.getenv("STRIPE_API_KEY")
 
-# 🎟️ Create the coupon once
-coupon = stripe.Coupon.create(
-    name='Everyday Business',
-    duration='once',
-    percent_off=25,
-)
+# 🏷️ Metadata for tracking restrictions
+target_price_id = 'price_1R9Ic2GWt28Mi4FnzhrXWvjZ'
+target_product_id = 'prod_S3PQodEWVRXKPR'
 
 # ⏳ Expiry date
 expiry_date = datetime.datetime(2025, 8, 30, 23, 59, 59)
 expires_at_unix = int(time.mktime(expiry_date.timetuple()))
 
-# 🏷️ Metadata for tracking restrictions
-target_price_id = 'price_1R9Ic2GWt28Mi4FnzhrXWvjZ'
-target_product_id = 'prod_S3PQodEWVRXKPR'
+# 🎟️ Create the coupon once
+coupon = stripe.Coupon.create(
+    name='Everyday Business',
+    duration='once',
+    percent_off=25,
+    metadata={
+        'intended_price': target_price_id,
+        'intended_product': target_product_id,
+        'campaign': 'BackToBusiness2024'
+    }
+)
 
 # 🔧 Constants
-TOTAL_CODES = 10_000
+TOTAL_CODES = 10
 WORKER_COUNT = 10
 BATCH_SIZE = 400
 
@@ -34,6 +39,7 @@ BATCH_SIZE = 400
 lock = threading.Lock()
 csv_file = open('promotion_codes.csv', 'w', newline='')
 writer = csv.writer(csv_file)
+writer.writerow(["Discount Codes", "Expiry Date", "Offer"])  # <-- Add header row
 
 def create_promo_code(_):
     for attempt in range(3):
@@ -42,13 +48,11 @@ def create_promo_code(_):
                 coupon=coupon.id,
                 max_redemptions=1,
                 expires_at=expires_at_unix,
-                metadata={
-                    'intended_price': target_price_id,
-                    'intended_product': target_product_id
-                }
             )
             with lock:
-                writer.writerow([promo.code])
+                expiry_str = expiry_date.strftime("%m/%d/%Y")  # Format expiry date
+                offer_text = f"{coupon.percent_off}% exclusive discount on {coupon.name} for users"  # Dynamic offer text
+                writer.writerow([promo.code, expiry_str, offer_text])  # Write all fields
             return True
         except stripe.error.RateLimitError:
             time.sleep(2 ** attempt)
