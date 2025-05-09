@@ -23,6 +23,8 @@ coupon = stripe.Coupon.create(
     name='Everyday Business',
     duration='once',
     percent_off=25,
+    # amount_off=0,
+    # currency='aud',
     metadata={
         'intended_price': target_price_id,
         'intended_product': target_product_id,
