@@ -6,6 +6,8 @@ import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dotenv import load_dotenv
 import os
+import random
+import string
 
 load_dotenv()
 stripe.api_key = os.getenv("STRIPE_API_KEY")
@@ -37,6 +39,7 @@ coupon = stripe.Coupon.create(
 TOTAL_CODES = 10
 WORKER_COUNT = 10
 BATCH_SIZE = 400
+PROMO_CODE_PREFIX = "YFB"  # <-- Add your desired prefix here (at least 3 chars)
 
 # 🧾 CSV setup
 lock = threading.Lock()
@@ -44,18 +47,25 @@ csv_file = open('promotion_codes.csv', 'w', newline='')
 writer = csv.writer(csv_file)
 writer.writerow(["Discount Codes", "Expiry Date", "Offer"])  # <-- Add header row
 
+def generate_code(prefix, length=8):
+    # Generates a code like PREFIX-AB12CD34
+    random_part = ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+    return f"{prefix}-{random_part}"
+
 def create_promo_code(_):
     for attempt in range(3):
         try:
+            code = generate_code(PROMO_CODE_PREFIX)
             promo = stripe.PromotionCode.create(
                 coupon=coupon.id,
                 max_redemptions=1,
                 expires_at=expires_at_unix,
+                code=code,  # Pass the full code here
             )
             with lock:
-                expiry_str = expiry_date.strftime("%m/%d/%Y")  # Format expiry date
-                offer_text = f"{coupon.percent_off:.0f}% off on the Group Essentials Subscription for {coupon.name} customers"  # Dynamic offer text
-                writer.writerow([promo.code, expiry_str, offer_text])  # Write all fields
+                expiry_str = expiry_date.strftime("%d/%m/%Y")
+                offer_text = f"{coupon.percent_off:.0f}% off on the Group Essentials Subscription for {coupon.name} customers"
+                writer.writerow([promo.code, expiry_str, offer_text])
             return True
         except stripe.error.RateLimitError:
             time.sleep(2 ** attempt)
