@@ -22,13 +22,13 @@ expires_at_unix = int(time.mktime(expiry_date.timetuple()))
 
 # 🎟️ Create the coupon once
 coupon = stripe.Coupon.create(
-    name='Everyday Business', # @ 700_000 @ 25% off
-    # name='Business Growth' # @ 100_000 @ 50% off
+    # name='Everyday Business', # @ 700_000 @ 25% off
+    name='Business Growth', # @ 100_000 @ 50% off
     # YFB
     # duration='once',
     duration='repeating',
     duration_in_months=12,   # Apply discount every month for 12 months
-    percent_off=25,
+    percent_off=50,
     # amount_off=0,
     # currency='aud',
     metadata={
