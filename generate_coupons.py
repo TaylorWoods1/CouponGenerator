@@ -10,7 +10,7 @@ import random
 import string
 
 load_dotenv()
-stripe.api_key = os.getenv("STRIPE_TEST_KEY")
+stripe.api_key = os.getenv("STRIPE_API_KEY")
 
 # 🏷️ Metadata for tracking restrictions
 target_price_id = 'price_1R9Ic2GWt28Mi4FnzhrXWvjZ'
@@ -37,7 +37,7 @@ coupon = stripe.Coupon.create(
 )
 
 # 🔧 Constants
-TOTAL_CODES = 10
+TOTAL_CODES = 100_000
 WORKER_COUNT = 10
 BATCH_SIZE = 400
 PROMO_CODE_PREFIX = "YFB"  # <-- Add your desired prefix here (at least 3 chars)
