@@ -20,7 +20,9 @@ expires_at_unix = int(time.mktime(expiry_date.timetuple()))
 
 # 🎟️ Create the coupon once
 coupon = stripe.Coupon.create(
-    name='Everyday Business',
+    name='Everyday Business', # @ 700_000 @ 25% off
+    # name='Business Growth' # @ 100_000 @ 50% off
+    # YFB
     duration='once',
     percent_off=25,
     # amount_off=0,
@@ -28,7 +30,6 @@ coupon = stripe.Coupon.create(
     metadata={
         'intended_price': target_price_id,
         'intended_product': target_product_id,
-        'campaign': 'BackToBusiness2024'
     }
 )
 
@@ -53,7 +54,7 @@ def create_promo_code(_):
             )
             with lock:
                 expiry_str = expiry_date.strftime("%m/%d/%Y")  # Format expiry date
-                offer_text = f"{coupon.percent_off}% exclusive discount on {coupon.name} for users"  # Dynamic offer text
+                offer_text = f"{coupon.percent_off:.0f}% off on the Group Essentials Subscription for {coupon.name} customers"  # Dynamic offer text
                 writer.writerow([promo.code, expiry_str, offer_text])  # Write all fields
             return True
         except stripe.error.RateLimitError:
