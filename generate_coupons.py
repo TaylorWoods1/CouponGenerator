@@ -10,7 +10,7 @@ import random
 import string
 
 load_dotenv()
-stripe.api_key = os.getenv("STRIPE_API_KEY")
+stripe.api_key = os.getenv("STRIPE_TEST_KEY")
 
 # 🏷️ Metadata for tracking restrictions
 target_price_id = 'price_1R9Ic2GWt28Mi4FnzhrXWvjZ'
@@ -25,7 +25,9 @@ coupon = stripe.Coupon.create(
     name='Everyday Business', # @ 700_000 @ 25% off
     # name='Business Growth' # @ 100_000 @ 50% off
     # YFB
-    duration='once',
+    # duration='once',
+    duration='repeating',
+    duration_in_months=12,   # Apply discount every month for 12 months
     percent_off=25,
     # amount_off=0,
     # currency='aud',
