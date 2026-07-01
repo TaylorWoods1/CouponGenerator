@@ -18,7 +18,9 @@ function renderOnboarding() {
       <h2>Welcome</h2>
       <p>Log when her last period started and Cycle Companion will track phases and share support tips.</p>
       <label for="start-date" class="sr-only">Period start date</label>
-      <input type="date" id="start-date" class="date-input" value="${today}" max="${today}">
+      <div class="date-input-wrap">
+        <input type="date" id="start-date" class="date-input" value="${today}" max="${today}">
+      </div>
       <button class="btn btn-primary" id="btn-save-start">Save period start</button>
     </div>
   `;

@@ -1,4 +1,4 @@
-const CACHE = 'cycle-companion-v1';
+const CACHE = 'cycle-companion-v2';
 const ASSETS = [
   './',
   './index.html',
