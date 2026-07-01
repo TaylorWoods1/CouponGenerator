@@ -1,4 +1,4 @@
-const CACHE = 'cycle-companion-v2';
+const CACHE = 'cycle-companion-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -6,7 +6,7 @@ const ASSETS = [
   './app.js',
   './storage.js',
   './cycle.js',
-  './tips.js',
+  './config.js',
   './manifest.json',
   './icons/icon.svg',
   './icons/icon-192.png',

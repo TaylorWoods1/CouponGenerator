@@ -1,6 +1,9 @@
 import Storage from './storage.js';
 import { getCycleState, formatDateISO } from './cycle.js';
 import { getTipsForPhase } from './tips.js';
+import { CONFIG } from './config.js';
+
+const { name } = CONFIG;
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -15,8 +18,8 @@ function renderOnboarding() {
   const today = formatDateISO(new Date());
   $('#main').innerHTML = `
     <div class="onboarding">
-      <h2>Welcome</h2>
-      <p>Log when her last period started and Cycle Companion will track phases and share support tips.</p>
+      <h2>Hey — let's track ${name}'s cycle</h2>
+      <p>Log when ${name}'s last period started. You'll see where she is in her cycle and get tips on how to show up for her.</p>
       <label for="start-date" class="sr-only">Period start date</label>
       <div class="date-input-wrap">
         <input type="date" id="start-date" class="date-input" value="${today}" max="${today}">
@@ -39,8 +42,8 @@ function renderDashboard(state) {
   const tipsHtml = tips.map((t) => `<li>${t}</li>`).join('');
 
   const countdownHtml = state.isOverdue
-    ? `<span class="overdue">Period may start <strong>any day now</strong></span>`
-    : `About <strong>${state.daysUntil}</strong> day${state.daysUntil === 1 ? '' : 's'} to next period`;
+    ? `<span class="overdue">${name}'s period may start <strong>any day now</strong></span>`
+    : `About <strong>${state.daysUntil}</strong> day${state.daysUntil === 1 ? '' : 's'} until ${name}'s next period`;
 
   const metaParts = [];
   if (state.learnedCycle) metaParts.push(`${state.learnedCycle}-day avg cycle`);
@@ -63,7 +66,7 @@ function renderDashboard(state) {
     </section>
 
     <section class="tips-card">
-      <h2>How to show up today</h2>
+      <h2>How to show up for ${name} today</h2>
       <ul>${tipsHtml}</ul>
     </section>
 

@@ -1,7 +1,7 @@
 {
-  "name": "Cycle Companion",
-  "short_name": "Cycle",
-  "description": "Track cycle phases and get supportive partner tips.",
+  "name": "For Lucy",
+  "short_name": "Lucy",
+  "description": "Track Lucy's cycle phases and get supportive partner tips.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#faf7f5",
